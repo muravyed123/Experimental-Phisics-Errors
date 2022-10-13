@@ -1,2 +1,1 @@
-while True:
-    print('дса оюдюер')
+print('fdfsdfsdfsfsdfsfdsfsdfsdfdsfsddfdsfdsfdsf1488')
