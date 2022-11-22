@@ -8,6 +8,8 @@ now_col1=2
 now_col2=2
 straight_vel = []
 kriv_vel = []
+kvf = []
+labels=[]
   
 window = Tk()  
 window.title("ProgrammPython-EPE")  
@@ -34,21 +36,64 @@ tab3 = Frame(tab_control,bd=5)
 tab4 = Frame(tab_control,bd=5)
 tab5 = Frame(tab_control,bd=5)
 def is_valid(newval):
-    result=  not(re.search(r'[^a-zA-Z0-9]', newval) is not None) and (len(newval)<2 or (not(re.search(r'[^a-zA-Z]', newval[0:len(newval)-2]) is not None) and( not newval[-2].isdigit() or newval[-1].isdigit()) ))
+    result=  not(re.search(r'[^a-zA-Z0-9]', newval) is not None) and (len(newval)<2 or (not(re.search(r'[^a-zA-Z]', newval[0:len(newval)-2]) is not None) and( not newval[-2].isdigit() or newval[-1].isdigit()) )) and len(newval)<5
     for i in range(len(straight_vel)):
         if straight_vel[i].get()==newval:
             result = False
             break
+    for i in range(len(kriv_vel)):
+        if kriv_vel[i].get()==newval:
+            result = False
+            break    
     return result
 def is_valid1(newval):
-    result=  not(re.search(r'[^a-zA-Z0-9]', newval) is not None) and (len(newval)<2 or (not(re.search(r'[^a-zA-Z]', newval[0:len(newval)-2]) is not None) and( not newval[-2].isdigit() or newval[-1].isdigit()) ))
+    result=  not(re.search(r'[^a-zA-Z0-9]', newval) is not None) and (len(newval)<2 or (not(re.search(r'[^a-zA-Z]', newval[0:len(newval)-2]) is not None) and( not newval[-2].isdigit() or newval[-1].isdigit()) )) and len(newval)<5
     for i in range(len(kriv_vel)):
         if kriv_vel[i].get()==newval:
             result = False
             break
+    for i in range(len(straight_vel)):
+        if straight_vel[i].get()==newval:
+            result = False
+            break    
     return result
+def is_valid2(newval):
+    result=  re.search(r'[^à-ÿÀ-ß]', newval) is not None or len(newval)==0
+    t = 0
+    for i in range(len(kvf)):
+        if kvf[i].get()==newval:
+            t = i
+            break
+    res = True
+    sym = symbols_from_expr(newval)
+    print(sym)
+    for i in range(len(sym)):
+        ty = False
+        for j in range(len(straight_vel)):
+            print(straight_vel[j].get(),',',sym[i])
+            if str(straight_vel[j].get())==str(sym[i]):
+                ty = True
+                print('aaaaaaaaaaaaa')
+                break
+        if not ty:
+            for j in range(len(kriv_vel)):
+                if kriv_vel[j].get()==sym[i]:
+                    ty = True
+                    break      
+        if not ty:
+            res = False
+            print(sym[i])
+            print(straight_vel[0].get())
+            break
+
+    if res:
+        labels[i].config(text = '+', fg = 'green')
+    else:
+        labels[i].config(text = '-', fg = 'red')
+    return(result)
 check = (tab1.register(is_valid), "%P")
 check1 = (tab2.register(is_valid1), "%P")
+check2 = (tab2.register(is_valid2), "%P")
 def add_new_vel():
     global now_col1
     global straight_vel
@@ -68,6 +113,14 @@ def add_newkr_vel():
     kriv_vel.append(var)
     phone_entry = Entry(tab2,validate="key", validatecommand=check1,textvariable=var) 
     phone_entry.grid(column = 0, row = now_col2+1)  
+    far = StringVar()
+    kvf.append(far)
+    formul_entry = Entry(tab2,validate='key', validatecommand=check2,textvariable=far)
+    formul_entry.grid(column = 0 , row = now_col2+2)
+    lab = Label(tab2, text = '+',fg="green",font=("Comic Sans MS",
+                 24, "bold"))
+    labels.append(lab)
+    lab.grid(column = 1, row = now_col2+2)
     now_col2+=4
 def pokprav():
     pass
